@@ -1,25 +1,47 @@
 package com.planties.plantiesbackend.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.planties.plantiesbackend.model.entity.Token;
 import com.planties.plantiesbackend.model.entity.Users;
 import com.planties.plantiesbackend.model.request.LoginRequest;
 import com.planties.plantiesbackend.model.request.RegisterRequest;
 import com.planties.plantiesbackend.model.response.AuthenticationResponse;
+import com.planties.plantiesbackend.repository.TokenRepository;
 import com.planties.plantiesbackend.repository.UsersRepository;
-import com.planties.plantiesbackend.service.intefaces.AuthenticationService;
+import com.planties.plantiesbackend.utils.TokenType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-public class AuthenticationServiceImpl implements AuthenticationService {
+import java.io.IOException;
+
+
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+
+    private final UsersRepository usersRepository;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenRepository tokenRepository;
+
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = Users.builder()
-                .firstname(request.)
-                .lastname(request.getLastname())
+                .username(request.getUsername())
                 .email(request.getEmail())
+                .fullname(request.getFullname())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
                 .build();
-        var savedUser = UsersRepository.save(user);
-        var jwtToken = JwtService.generateToken(user);
-        var refreshToken = JwtService.generateRefreshToken(user);
+        var savedUser = usersRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -27,17 +49,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(LoginRequest request) {
+    public AuthenticationResponse authentications(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getUsername(),
                         request.getPassword()
                 )
         );
-        var user = UsersRepository.findByEmail(request.getEmail())
+        var user = usersRepository.findByUsername(request.getUsername())
                 .orElseThrow();
-        var jwtToken = JwtService.generateToken(user);
-        var refreshToken = JwtService.generateRefreshToken(user);
+
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
@@ -46,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(Users user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -57,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
+    private void revokeAllUserTokens(Users user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
@@ -74,14 +97,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String userEmail;
+        final String userUsername;
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
+        userUsername = jwtService.extractUsername(refreshToken);
+        if (userUsername != null) {
+            var user = this.usersRepository.findByUsername(userUsername)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);

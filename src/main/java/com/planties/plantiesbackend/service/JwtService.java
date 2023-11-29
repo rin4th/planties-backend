@@ -4,7 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
@@ -23,7 +23,7 @@ public class JwtService {
     private String secretKey;
     @Value("${application.plantiesbackend.jwt.expiration}")
     private long jwtExpiration;
-    @Value("{application.plantiesbackend.jwt.refresh-token.expiration")
+    @Value("${application.plantiesbackend.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
     public String extractUsername(String token){

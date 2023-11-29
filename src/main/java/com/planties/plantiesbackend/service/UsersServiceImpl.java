@@ -19,23 +19,23 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UsersServiceImpl implements UsersService {
 
-    @Override
-    public ProfileViewResponse profile(Member member) {
-        return null;
-    }
-
-    @Override
-    public ProfileViewResponse profile(Users user) {
-        return null;
-    }
-
-    @Override
-    public ProfileViewResponse profileUpdate(Users user, ProfileUpdateRequest profileUpdateRequest) {
-        return null;
-    }
-
-    @Override
-    public ProfileViewResponse profileImage(Users user, HttpServletRequest request) {
-        return null;
-    }
+//    @Override
+//    public ProfileViewResponse profile(Users user) {
+//        return null;
+//    }
+//
+//    @Override
+//    public ProfileViewResponse profile(Users user) {
+//        return null;
+//    }
+//
+//    @Override
+//    public ProfileViewResponse profileUpdate(Users user, ProfileUpdateRequest profileUpdateRequest) {
+//        return null;
+//    }
+//
+//    @Override
+//    public ProfileViewResponse profileImage(Users user, HttpServletRequest request) {
+//        return null;
+//    }
 }

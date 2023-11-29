@@ -13,12 +13,12 @@ import java.io.IOException;
 @Service
 public interface UsersService {
 
-    ProfileViewResponse profile(Users member);
-    ProfileViewResponse profile(Users user);
-
-    ProfileViewResponse profileUpdate(Users user, ProfileUpdateRequest profileUpdateRequest);
-
-    ProfileViewResponse profileImage(Users user, HttpServletRequest request);
+//    ProfileViewResponse profile(Users member);
+//    ProfileViewResponse profile(Users user);
+//
+//    ProfileViewResponse profileUpdate(Users user, ProfileUpdateRequest profileUpdateRequest);
+//
+//    ProfileViewResponse profileImage(Users user, HttpServletRequest request);
 
 
 }
