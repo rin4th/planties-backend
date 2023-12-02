@@ -1,6 +1,5 @@
 package com.planties.plantiesbackend.configuration;
 
-import com.planties.plantiesbackend.auditing.ApplicationAuditAware;
 import com.planties.plantiesbackend.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,11 +36,6 @@ public class ApplicationConfig {
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    }
-
-    @Bean
-    public AuditorAware<String> auditorAware() {
-        return new ApplicationAuditAware();
     }
 
     @Bean
