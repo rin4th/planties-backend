@@ -13,12 +13,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Service
@@ -33,6 +35,20 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (request.getUsername().isEmpty() || request.getEmail().isEmpty() || request.getFullname().isEmpty() || request.getPassword().isEmpty()){
+            throw new IllegalStateException("tidak dapat membuat user baru karena properti yang dibutuhkan tidak ada");
+        }
+
+        Optional<Users> existUsername = usersRepository.findByUsername(request.getUsername());
+        if (existUsername.isPresent()){
+            throw new IllegalStateException("Tidak dapat membuat user baru dengan username yang telah dipakai");
+        }
+
+        Optional<Users> existEmail = usersRepository.findByEmail(request.getEmail());
+        if (existEmail.isPresent()){
+            throw new IllegalStateException("Tidak dapat membuat user baru dengan email yang telah digunakan");
+        }
+
         var user = Users.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
