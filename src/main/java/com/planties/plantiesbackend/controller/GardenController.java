@@ -2,6 +2,7 @@ package com.planties.plantiesbackend.controller;
 
 import com.planties.plantiesbackend.model.entity.Garden;
 import com.planties.plantiesbackend.model.request.GardenRequest;
+import com.planties.plantiesbackend.model.response.GardenResponse;
 import com.planties.plantiesbackend.model.response.ResponseHandler;
 import com.planties.plantiesbackend.service.GardenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,9 +37,9 @@ public class GardenController {
     )  {
         Optional<Garden> garden = service.getGardenById(gardenId, header);
         if (garden.isPresent()) {
-            return ResponseHandler.generateResponse("success", "Success get Garden by ID", garden, HttpStatus.OK);
+            return GardenResponse.generateResponse("success", "Success get Garden by ID", garden, HttpStatus.OK);
         } else {
-            return ResponseHandler.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
+            return GardenResponse.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -46,7 +47,7 @@ public class GardenController {
     @PostMapping()
     public ResponseEntity<Object> addNewGarden(
             HttpServletRequest header,
-            @RequestBody Garden request
+            @RequestBody GardenRequest request
     ){
         return ResponseHandler.generateResponse("success", "Success add New Garden", service.addNewGarden(header, request), HttpStatus.OK);
     }

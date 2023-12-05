@@ -52,7 +52,7 @@ public class GardenService {
 
     public Garden addNewGarden(
             HttpServletRequest authorization,
-            Garden request
+            GardenRequest request
             ){
         final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
