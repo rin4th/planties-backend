@@ -1,5 +1,5 @@
 -- Menggunakan Database "planties"
-\c planties;
+\c planties_pbo;
 
 -- Tabel User
 DROP TABLE IF EXISTS Users cascade;
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Role (
 DROP TABLE IF EXISTS Oxygen cascade;
 CREATE TABLE IF NOT EXISTS Oxygen (
     user_id VARCHAR(255) PRIMARY KEY,
-    oxygen DOUBLE,
+    oxygen DOUBLE PRECISION,
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
