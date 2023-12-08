@@ -24,4 +24,4 @@ application:
 
 server:
   port: 12345
-  address: 172.31.25.27
+  address: 13.213.56.18
