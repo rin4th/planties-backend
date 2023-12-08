@@ -21,3 +21,7 @@ application:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
+
+server:
+  port: 12344
+  address: 172.31.24.237
