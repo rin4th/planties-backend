@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public interface GardenRepository extends JpaRepository<Garden, UUID> {
 
     @Query("SELECT g FROM Garden g join Users u on g.user_id = u.id where g.user_id = :id")
-    List<Garden> findAllGardensByUserId(String id);
+    List<Garden> findAllGardensByUserId(UUID id);
 
 
     @Query("""
@@ -23,5 +23,5 @@ public interface GardenRepository extends JpaRepository<Garden, UUID> {
             on g.user_id = u.id where u.id = :id\s
             and (g.name = :name and g.type = :type)
             """)
-    Optional<Garden> findGardenByNameAndType(String id, String name, String type);
+    Optional<Garden> findGardenByNameAndType(UUID id, String name, String type);
 }

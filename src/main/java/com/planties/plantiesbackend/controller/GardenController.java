@@ -7,11 +7,12 @@ import com.planties.plantiesbackend.model.response.ResponseHandler;
 import com.planties.plantiesbackend.service.GardenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,14 +21,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GardenController {
 
+
     private final GardenService service;
+
+
+    private final GardenResponse gardenResponse;
 
     @GetMapping()
     public ResponseEntity<Object> getAllGardens(
             HttpServletRequest header
             )  {
 
-        return ResponseHandler.generateResponse("success", "Success get All Gardens", service.getAllGardens(header), HttpStatus.OK);
+        List<Garden> gardens = service.getAllGardens(header);
+        return ResponseHandler.generateResponse("success", "Success get All Gardens", gardenResponse.generateJson(gardens), HttpStatus.OK);
     }
 
     @GetMapping("/{gardenId}")
@@ -37,9 +43,9 @@ public class GardenController {
     )  {
         Optional<Garden> garden = service.getGardenById(gardenId, header);
         if (garden.isPresent()) {
-            return GardenResponse.generateResponse("success", "Success get Garden by ID", garden, HttpStatus.OK);
+            return ResponseHandler.generateResponse("success", "Success get Garden by ID", gardenResponse.generateJson(garden), HttpStatus.CREATED);
         } else {
-            return GardenResponse.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
+            return ResponseHandler.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,18 +55,19 @@ public class GardenController {
             HttpServletRequest header,
             @RequestBody GardenRequest request
     ){
-        return ResponseHandler.generateResponse("success", "Success add New Garden", service.addNewGarden(header, request), HttpStatus.OK);
+        Garden garden = service.addNewGarden(header, request);
+        return ResponseHandler.generateResponse("success", "Success add New Garden", gardenResponse.generateJson(garden), HttpStatus.OK);
     }
 
 
     @DeleteMapping("/{gardenId}")
     public ResponseEntity<Object> deleteGarden(
-            @PathVariable UUID gardenId,
+            @PathVariable String gardenId,
             HttpServletRequest header
     )  {
         Optional<Garden> deletedGarden = service.deleteGardenById(gardenId, header);
         if (deletedGarden.isPresent()) {
-            return ResponseHandler.generateResponse("success", "Garden deleted successfully", null, HttpStatus.OK);
+            return ResponseHandler.generateResponse("success", "Garden deleted successfully", gardenResponse.generateJson(deletedGarden), HttpStatus.OK);
         } else {
             return ResponseHandler.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
         }

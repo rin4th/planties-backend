@@ -42,11 +42,14 @@ CREATE TABLE IF NOT EXISTS Garden (
 -- Tabel Plant
 DROP TABLE IF EXISTS Plant cascade;
 CREATE TABLE IF NOT EXISTS Plant (
+    id VARCHAR(50) PRIMARY KEY,
     name VARCHAR(255),
     banner VARCHAR(255),
     photo TEXT[],
     garden_id VARCHAR(255),
-    FOREIGN KEY (garden_id) REFERENCES Garden(id)
+    user_id VARCHAR(255),
+    FOREIGN KEY (garden_id) REFERENCES Garden(id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
 -- Tabel Reminder

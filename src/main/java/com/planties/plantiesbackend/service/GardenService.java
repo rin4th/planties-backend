@@ -40,7 +40,7 @@ public class GardenService {
             Users user = this.usersRepository.findByUsername(userUsername)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            var userID = user.getId();
+            UUID userID = user.getId();
             if (userID != null){
                 return gardenRepository.findAllGardensByUserId(userID);
 
@@ -115,7 +115,7 @@ public class GardenService {
 
 
     public Optional<Garden> deleteGardenById(
-            UUID gardenId,
+            String gardenId,
             HttpServletRequest authorization
     ){
         final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
@@ -132,9 +132,10 @@ public class GardenService {
 
             var userID = user.getId();
             if (userID != null){
-                Optional<Garden> garden = gardenRepository.findById(gardenId);
+                Optional<Garden> garden = gardenRepository.findById(UUID.fromString(gardenId));
                 if (garden.isPresent()){
-                    gardenRepository.deleteById(gardenId);
+                    gardenRepository.deleteById(UUID.fromString(gardenId));
+                    return garden;
                 }
             }
         }

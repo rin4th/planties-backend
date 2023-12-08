@@ -22,12 +22,11 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-
     @PostMapping("users")
     public ResponseEntity<Object> register(
             @RequestBody RegisterRequest request
     ) {
-        Object returnRegister =  service.register(request);
+        AuthenticationResponse returnRegister =  service.register(request);
         return ResponseHandler.generateResponse("success", "Success register new User", returnRegister, HttpStatus.OK);
     }
 

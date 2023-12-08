@@ -13,8 +13,14 @@ public interface PlantRepository extends JpaRepository<Plant, UUID> {
     @Query("""
             Select p From Plant p\s
             Join Garden g On p.garden_id = g.id\s
-            Join Users u On p.user_id = u.id\s
-            where p.garden_id = :gardenId And p.user_id = :userId
+            where p.garden_id = :gardenId
             """)
-    List<Plant> findAllPlantByGardenIdAndUserId(@Param("gardenId") String gardenId, @Param("userId") String userId);
+    List<Plant> findAllPlantByGardenId(@Param("gardenId") UUID gardenId);
+
+    @Query("""
+            Select p From Plant p\s
+            Join Garden g On p.garden_id = g.id\s
+            where p.id = :plantId And p.garden_id = :gardenId
+            """)
+    Plant findPlantByIdByGardenId(@Param("plantId") UUID plantId, @Param("gardenId") UUID gardenId);
 }

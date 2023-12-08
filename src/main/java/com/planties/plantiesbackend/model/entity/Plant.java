@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -21,12 +22,14 @@ public class Plant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
     private String name;
 
     private String banner;
 
     private ArrayList<String> url_image;
 
-    private String garden_id;
+    private UUID garden_id;
+
+    private UUID user_id;
 }

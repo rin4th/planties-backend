@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,11 +17,11 @@ import lombok.NoArgsConstructor;
 public class Garden {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
     private String name;
 
     private String type;
 
-    private String user_id;
+    private UUID user_id;
 
 }
