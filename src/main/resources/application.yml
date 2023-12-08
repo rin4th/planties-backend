@@ -24,4 +24,4 @@ application:
 
 server:
   port: 12345
-  address: localhost
+  address: 172.31.25.27
