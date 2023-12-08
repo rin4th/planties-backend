@@ -23,5 +23,5 @@ application:
         expiration: 604800000
 
 server:
-  port: 12344
-  address: 172.31.24.237
+  port: 12345
+  address: 172.31.25.27

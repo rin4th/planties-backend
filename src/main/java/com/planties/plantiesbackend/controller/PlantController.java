@@ -38,15 +38,15 @@ public class PlantController {
         return PlantResponse.generateResponse("success", "Success add new Plant", service.addNewPlant(authorization, gardenId, plant), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/{gardenId}/plants/{plantId}")
-    public ResponseEntity<Object> editPlant(
-            HttpServletRequest authorization,
-            @PathVariable UUID gardenId,
-            @PathVariable UUID plantId,
-            @RequestBody PlantRequest plant
-    ){
-        return PlantResponse.generateResponse("success", "Success edit Plant", service.editPlant(authorization, gardenId, plant), HttpStatus.OK);
-    }
+//    @PutMapping(path = "/{gardenId}/plants/{plantId}")
+//    public ResponseEntity<Object> editPlant(
+//            HttpServletRequest authorization,
+//            @PathVariable UUID gardenId,
+//            @PathVariable UUID plantId,
+//            @RequestBody PlantRequest plant
+//    ){
+//        return PlantResponse.generateResponse("success", "Success edit Plant", service.editPlant(authorization, gardenId, plant), HttpStatus.OK);
+//    }
 
     @GetMapping(path = "{gardenId}/plants/{plantId}")
     public ResponseEntity<Object> findPlantById(
