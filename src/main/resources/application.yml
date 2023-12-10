@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://planties-database.cq7ztlpnmlve.ap-southeast-1.rds.amazonaws.com:5432/planties_pbo
-    username: developer
-    password: rizal-galih-0nly
+    url: jdbc:postgresql://localhost:5432/planties
+    username: machi
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -23,5 +23,5 @@ application:
         expiration: 604800000
 
 server:
-  port: 12345
-  address: 172.31.25.27
+  port: 8080
+  address: localhost
