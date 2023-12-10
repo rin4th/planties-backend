@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
-
+@Repository
 public interface GardenRepository extends JpaRepository<Garden, UUID> {
 
     @Query("SELECT g FROM Garden g join Users u on g.user_id = u.id where g.user_id = :id")

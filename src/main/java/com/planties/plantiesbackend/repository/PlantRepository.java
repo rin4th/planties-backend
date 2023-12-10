@@ -23,4 +23,11 @@ public interface PlantRepository extends JpaRepository<Plant, UUID> {
             where p.id = :plantId And p.garden_id = :gardenId
             """)
     Plant findPlantByIdByGardenId(@Param("plantId") UUID plantId, @Param("gardenId") UUID gardenId);
+
+    @Query("""
+            Select p From Plant p\s
+            Join Users u On p.user_id = u.id\s
+            where p.user_id = :userId
+            """)
+    List<Plant> findAllPlantByUserId(@Param("userId") UUID userId);
 }

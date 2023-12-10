@@ -9,10 +9,10 @@ import java.util.Map;
 
 @Component
 public class PlantResponse {
-    public static ResponseEntity<Object> generateResponse(String status, String message, Object responseObj, HttpStatus httpStatus) {
+    public static Map<String, Object> generateJson(Object responseObj) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("plants", responseObj);
 
-        return new ResponseEntity<Object>(map, httpStatus);
+        return map;
     }
 }
