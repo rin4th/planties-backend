@@ -42,11 +42,7 @@ public class GardenController {
             HttpServletRequest header
     )  {
         Optional<Garden> garden = service.getGardenById(gardenId, header);
-        if (garden.isPresent()) {
-            return ResponseHandler.generateResponse("success", "Success get Garden by ID", gardenResponse.generateJson(garden), HttpStatus.CREATED);
-        } else {
-            return ResponseHandler.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
-        }
+        return ResponseHandler.generateResponse("success", "Success get Garden by ID", gardenResponse.generateJson(garden), HttpStatus.CREATED);
     }
 
 
@@ -59,17 +55,22 @@ public class GardenController {
         return ResponseHandler.generateResponse("success", "Success add New Garden", gardenResponse.generateJson(garden), HttpStatus.OK);
     }
 
+    @PutMapping("/{gardenId}")
+    public ResponseEntity<Object> updateGarden(
+            @PathVariable UUID gardenId,
+            HttpServletRequest header,
+            @RequestBody GardenRequest request
+    ){
+        Garden garden = service.updateGardenById(gardenId, request, header);
+        return ResponseHandler.generateResponse("success", "Success update Garden", gardenResponse.generateJson(garden), HttpStatus.OK);
+    }
 
     @DeleteMapping("/{gardenId}")
     public ResponseEntity<Object> deleteGarden(
-            @PathVariable String gardenId,
+            @PathVariable UUID gardenId,
             HttpServletRequest header
     )  {
-        Optional<Garden> deletedGarden = service.deleteGardenById(gardenId, header);
-        if (deletedGarden.isPresent()) {
-            return ResponseHandler.generateResponse("success", "Garden deleted successfully", gardenResponse.generateJson(deletedGarden), HttpStatus.OK);
-        } else {
-            return ResponseHandler.generateResponse("error", "Garden not found", null, HttpStatus.NOT_FOUND);
-        }
+        Garden deletedGarden = service.deleteGardenById(gardenId, header);
+        return ResponseHandler.generateResponse("success", "Garden deleted successfully", gardenResponse.generateJson(deletedGarden), HttpStatus.OK);
     }
 }

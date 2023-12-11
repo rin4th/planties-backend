@@ -20,4 +20,6 @@ public interface UsersRepository extends JpaRepository<Users, UUID> {
 
     Optional<Users> findByEmail(String email);
 
+    @Query("Select u From Users u Where u.username = :username And u.password = :password")
+    Optional<Users> login(String username, String password);
 }
