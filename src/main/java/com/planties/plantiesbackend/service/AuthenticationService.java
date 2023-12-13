@@ -75,7 +75,7 @@ public class AuthenticationService {
         );
 
         var user = usersRepository.findByUsername(request.getUsername())
-                .orElseThrow();
+                .orElseThrow(() -> new CustomException.WrongCredentialException("Username atau Passowrd salah"));
 
 
         var jwtToken = jwtService.generateToken(user);

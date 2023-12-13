@@ -139,6 +139,7 @@ public class ReminderService {
                 .name(request.getName())
                 .type(request.getType())
                 .duration(request.getDuration())
+                .garden_id(gardenId)
                 .build();
         reminderRepository.save(reminder);
         return reminder;

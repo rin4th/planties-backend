@@ -224,9 +224,6 @@ public class PlantService {
         if (request.getBanner() == null) {
             throw new CustomException.BadRequestException("Banner tidak boleh kosong");
         }
-        if (request.getImageBase64() == null){
-            throw new CustomException.BadRequestException("Gambar tidak boleh kosong tidak boleh kosong");
-        }
         plant.setName(request.getName());
         plant.setBanner(request.getBanner());
         plant.setUrl_image(request.getImageBase64()); // temporarya
