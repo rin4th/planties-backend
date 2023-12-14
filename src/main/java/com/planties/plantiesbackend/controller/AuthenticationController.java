@@ -34,7 +34,8 @@ public class AuthenticationController {
     public ResponseEntity<Object> authenticate(
             @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(service.authentications(request));
+        AuthenticationResponse token = service.authentications(request);
+        return ResponseHandler.generateResponse("success", "Success login", token, HttpStatus.OK);
     }
 
     @PutMapping("authentications")

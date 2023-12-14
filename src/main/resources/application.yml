@@ -25,3 +25,10 @@ application:
 server:
   port: 8080
   address: localhost
+
+aws:
+  accessKeyId:
+  secretKey:
+  region:
+  s3:
+    bucketName:
