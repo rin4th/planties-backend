@@ -24,4 +24,12 @@ application:
 
 server:
   port: 8080
-  address: 172.31.31.129
+
+  address: localhost
+
+aws:
+  accessKeyId:
+  secretKey:
+  region:
+  s3:
+    bucketName:

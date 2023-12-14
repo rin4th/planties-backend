@@ -25,30 +25,15 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ReminderService {
-    private final JwtService jwtService;
     private final ReminderRepository reminderRepository;
-    private final UsersRepository usersRepository;
     private final GardenRepository gardenRepository;
+    private final UsersService usersService;
 
     public List<Reminder> getAllRemindersByGardenId(
             HttpServletRequest authorization,
             UUID gardenId
     ) {
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
-
+        Users user = usersService.getProfile(authorization);
         var userID = user.getId();
         if (userID == null){
             throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
@@ -69,20 +54,7 @@ public class ReminderService {
             UUID gardenId,
             UUID reminderId
     ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-               .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -108,20 +80,7 @@ public class ReminderService {
             UUID gardenId,
             ReminderRequest request
     ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -139,6 +98,7 @@ public class ReminderService {
                 .name(request.getName())
                 .type(request.getType())
                 .duration(request.getDuration())
+                .garden_id(gardenId)
                 .build();
         reminderRepository.save(reminder);
         return reminder;
@@ -151,20 +111,7 @@ public class ReminderService {
             UUID reminderId,
             ReminderRequest request
     ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -203,20 +150,7 @@ public class ReminderService {
             UUID gardenId,
             UUID reminderId
     ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){

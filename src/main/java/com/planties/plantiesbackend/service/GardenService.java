@@ -23,27 +23,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GardenService {
 
-    private final JwtService jwtService;
+    private final UsersService usersService;
     private final GardenRepository gardenRepository;
-    private final UsersRepository usersRepository;
 
 
     public List<Garden> getAllGardens(HttpServletRequest authorization){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-
-        var user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         UUID userID = user.getId();
 
@@ -54,19 +39,7 @@ public class GardenService {
             HttpServletRequest authorization,
             GardenRequest request
             ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                 .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -90,20 +63,7 @@ public class GardenService {
             UUID gardenId,
             HttpServletRequest authorization
     ) {
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -126,20 +86,7 @@ public class GardenService {
             GardenRequest request,
             HttpServletRequest authorization
             ) {
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -169,20 +116,7 @@ public class GardenService {
             UUID gardenId,
             HttpServletRequest authorization
     ){
-        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token;
-        final String userUsername;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new CustomException.InvalidTokenException("Not a Bearer token");
-        }
-        token = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(token);
-
-        if (userUsername == null){
-            throw new CustomException.InvalidTokenException("Invalid Token");
-        }
-        Users user = this.usersRepository.findByUsername(userUsername)
-                .orElseThrow(() -> new CustomException.UsernameNotFoundException("User tidak ditemukan"));
+        Users user = usersService.getProfile(authorization);
 
         var userID = user.getId();
         if (userID == null){
