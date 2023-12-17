@@ -28,6 +28,7 @@ public class Users implements UserDetails {
     private String password;
     private String fullname;
     private String profileImage;
+    private String role;
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;

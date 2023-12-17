@@ -11,6 +11,7 @@ import com.planties.plantiesbackend.model.response.PlantResponse;
 import com.planties.plantiesbackend.repository.GardenRepository;
 import com.planties.plantiesbackend.repository.PlantRepository;
 import com.planties.plantiesbackend.repository.UsersRepository;
+import com.planties.plantiesbackend.utils.ImageProcess;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class PlantService {
     private final UsersService usersService;
     private final PlantRepository plantRepository;
     private final GardenRepository gardenRepository;
+    private final ImageProcess imageProcess;
 
     public List<Plant> getAllPlants(
             HttpServletRequest authorization
@@ -82,10 +85,17 @@ public class PlantService {
         if (!garden.getUser_id().equals(userID)){
             throw new CustomException.InvalidIdException("Anda bukan pemilik garden ini");
         }
+        UUID plantId = UUID.randomUUID();
+        ArrayList<String> urlImages = new ArrayList<String>();
+        for (String base64Image : request.getImageBase64()) {
+            urlImages.add(imageProcess.uploadImage(base64Image, "plant", plantId));
+        }
+
         Plant plant = Plant.builder()
+                .id(plantId)
                 .name(request.getName())
                 .banner(request.getBanner())
-                .url_image(request.getImageBase64()) // temporary
+                .url_image(urlImages)
                 .garden_id(garden.getId())
                 .user_id(userID)
                 .build();

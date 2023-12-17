@@ -1,13 +1,15 @@
 package com.planties.plantiesbackend.model.entity;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Data
@@ -15,13 +17,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Garden {
+public class ImagePlant {
     @Id
     private UUID id;
-    private String name;
-    private ArrayList<String> url_image;
-    private String type;
 
-    private UUID user_id;
+    private String url;
 
+    private UUID plant_id;
 }

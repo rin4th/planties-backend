@@ -19,9 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 public class Plant {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
 

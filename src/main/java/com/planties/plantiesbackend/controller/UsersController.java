@@ -9,23 +9,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/profile")
 @RequiredArgsConstructor
-public class ProfileController {
+public class UsersController {
 
     private final UsersService service;
     private final UsersResponse response;
 
     @GetMapping()
-    public ResponseEntity<Object> getUsers(
+    public ResponseEntity<Object> getProfile(
             HttpServletRequest authorization
     ) {
         Users user = service.getProfile(authorization);
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(user), HttpStatus.OK);
     }
+
 }

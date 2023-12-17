@@ -6,6 +6,7 @@ import com.planties.plantiesbackend.model.entity.Users;
 import com.planties.plantiesbackend.model.request.GardenRequest;
 import com.planties.plantiesbackend.repository.GardenRepository;
 import com.planties.plantiesbackend.repository.UsersRepository;
+import com.planties.plantiesbackend.utils.ImageProcess;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -25,6 +23,7 @@ public class GardenService {
 
     private final UsersService usersService;
     private final GardenRepository gardenRepository;
+    private final ImageProcess imageProcess;
 
 
     public List<Garden> getAllGardens(HttpServletRequest authorization){
@@ -50,9 +49,16 @@ public class GardenService {
         if (gardenByNameAndType.isPresent()){
             throw new CustomException.NameOrTypeTakenException("name taken");
         }
+        UUID gardenId = UUID.randomUUID();
+        ArrayList<String> urlImages = new ArrayList<String>();
+        for (String base64Image : request.getImageBase64()) {
+            urlImages.add(imageProcess.uploadImage(base64Image, "garden", gardenId));
+        }
         Garden garden = Garden.builder()
+                .id(gardenId)
                 .name(request.getName())
                 .type(request.getType())
+                .url_image(urlImages)
                 .user_id(userID)
                 .build();
         gardenRepository.save(garden);

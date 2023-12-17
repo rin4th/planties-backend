@@ -16,7 +16,9 @@ CREATE TABLE Users(
 DROP TABLE IF EXISTS Role;
 CREATE TABLE IF NOT EXISTS Role (
     id VARCHAR(255) PRIMARY KEY,
-    role VARCHAR(255) NOT NULL
+    role VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
 -- Tabel Oxygen

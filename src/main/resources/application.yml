@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://planties-database.cq7ztlpnmlve.ap-southeast-1.rds.amazonaws.com:5432/planties
-    username: developer
-    password: rizal-galih-0nly
+    url:
+    username:
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -17,18 +17,18 @@ spring:
 application:
   plantiesbackend:
     jwt:
-      secret-key: 764c546677316635503337434265503849736b5564434d36504d6a4d544d6939
+      secret-key:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
 
 server:
   port: 8080
-  address: 172.31.31.129
+  address:
 
 aws:
-  accessKeyId:
-  secretKey:
-  region:
   s3:
+    accessKeyId:
+    secretKey:
+    region:
     bucketName:

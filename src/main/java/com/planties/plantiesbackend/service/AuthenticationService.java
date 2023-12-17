@@ -55,6 +55,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .fullname(request.getFullname())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role("client")
                 .build();
         var savedUser = usersRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -63,10 +64,11 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .role(user.getRole())
                 .build();
     }
 
-    public AuthenticationResponse authentications(LoginRequest request) {
+    public AuthenticationResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -85,6 +87,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .role(user.getRole())
                 .build();
     }
 

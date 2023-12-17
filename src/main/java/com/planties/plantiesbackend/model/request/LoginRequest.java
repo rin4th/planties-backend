@@ -16,5 +16,5 @@ import org.hibernate.validator.constraints.Length;
 public class LoginRequest {
 
     private String username;
-    String password;
+    private String password;
 }
