@@ -17,7 +17,7 @@ spring:
 application:
   plantiesbackend:
     jwt:
-      secret-key: 764c546677316635503337434265503849736b5564434d36504d6a4d544d6939
+      secret-key:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
