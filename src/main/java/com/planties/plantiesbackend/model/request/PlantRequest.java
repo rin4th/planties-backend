@@ -15,5 +15,7 @@ import java.util.ArrayList;
 public class PlantRequest {
     private String name;
     private String banner;
+    private String date;
+    private String type;
     private ArrayList<String> imageBase64;
 }

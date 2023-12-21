@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,8 @@ public class PlantService {
     private final PlantRepository plantRepository;
     private final GardenRepository gardenRepository;
     private final ImageProcess imageProcess;
+    private final OxygenService oxgenService;
+
 
     public List<Plant> getAllPlants(
             HttpServletRequest authorization
@@ -91,12 +94,18 @@ public class PlantService {
             urlImages.add(imageProcess.uploadImage(base64Image, "plant", plantId));
         }
 
+        // Initialize Oxygen
+        LocalDate date = LocalDate.parse(request.getDate());
+        double oxygen = oxgenService.InitialOxygen(request.getType(), date, userID);
+
         Plant plant = Plant.builder()
                 .id(plantId)
                 .name(request.getName())
                 .banner(request.getBanner())
                 .url_image(urlImages)
                 .garden_id(garden.getId())
+                .date(date)
+                .oxygen(oxygen)
                 .user_id(userID)
                 .build();
         plantRepository.save(plant);
