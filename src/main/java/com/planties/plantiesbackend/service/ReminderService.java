@@ -33,7 +33,7 @@ public class ReminderService {
             HttpServletRequest authorization,
             UUID gardenId
     ) {
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
         var userID = user.getId();
         if (userID == null){
             throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
@@ -54,7 +54,7 @@ public class ReminderService {
             UUID gardenId,
             UUID reminderId
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -80,7 +80,7 @@ public class ReminderService {
             UUID gardenId,
             ReminderRequest request
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -111,7 +111,7 @@ public class ReminderService {
             UUID reminderId,
             ReminderRequest request
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -150,7 +150,7 @@ public class ReminderService {
             UUID gardenId,
             UUID reminderId
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){

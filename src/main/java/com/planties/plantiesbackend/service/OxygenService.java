@@ -1,5 +1,6 @@
 package com.planties.plantiesbackend.service;
 
+import com.planties.plantiesbackend.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.planties.plantiesbackend.configuration.CustomException;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +26,7 @@ public class OxygenService {
     private final PlantRepository plantRepository;
     private final OxygenRepository oxygenRepository;
     private final UsersService usersService;
+    private final UsersRepository usersRepository;
 
 
     @Transactional
@@ -49,6 +48,7 @@ public class OxygenService {
             Oxygen oxygenEntity = Oxygen.builder()
                     .user_id(user_id)
                     .oxygen(oxygen)
+                    .rank(999)
                     .build();
             oxygenRepository.save(oxygenEntity);
         }else{
@@ -93,14 +93,31 @@ public class OxygenService {
         }
     }
 
-    public List<Oxygen> getLeaderboard(HttpServletRequest authorization){
-        Users user = usersService.getProfile(authorization);
-
-        var userID = user.getId();
-        if (userID == null){
-            throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateLeaderboard(){
+        Random random = new Random();
+        int rank = 1;
+        for (Oxygen oxy : oxygenRepository.findAllOrderByOxygen()){
+            oxy.setRank(rank);
+            rank++;
         }
-        return oxygenRepository.findAllOrderByOxygen();
+    }
+
+    public List<Oxygen> getLeaderboards(HttpServletRequest authorization){
+        Users user = usersService.checkUsers(authorization);
+        return oxygenRepository.getLeaderboard();
+    }
+
+    public Oxygen getRank(
+            HttpServletRequest authorization,
+            UUID userId
+    ){
+        Users user = usersService.checkUsers(authorization);
+        if (!user.getId().equals(userId)){
+            throw new CustomException.InvalidIdException("Jwt dengan UserID berbeda");
+        }
+        return oxygenRepository.findById(user.getId()).get();
     }
 
 }

@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://url:5432/planties_pbo
+    url: jdbc:postgresql://:5432/planties_pbo
     username:
     password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -24,7 +24,7 @@ application:
 
 server:
   port: 8080
-  address:
+  address: 
 
 aws:
   s3:

@@ -27,7 +27,7 @@ public class GardenService {
 
 
     public List<Garden> getAllGardens(HttpServletRequest authorization){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         UUID userID = user.getId();
 
@@ -38,7 +38,7 @@ public class GardenService {
             HttpServletRequest authorization,
             GardenRequest request
             ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -69,7 +69,7 @@ public class GardenService {
             UUID gardenId,
             HttpServletRequest authorization
     ) {
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -92,7 +92,7 @@ public class GardenService {
             GardenRequest request,
             HttpServletRequest authorization
             ) {
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -122,7 +122,7 @@ public class GardenService {
             UUID gardenId,
             HttpServletRequest authorization
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){

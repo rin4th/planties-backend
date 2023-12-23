@@ -18,5 +18,7 @@ public class Oxygen {
     @Id
     private UUID user_id;
 
+    private int rank;
+
     private double oxygen;
 }

@@ -27,7 +27,7 @@ public class Users implements UserDetails {
     private String email;
     private String password;
     private String fullname;
-    private String profileImage;
+    private String url_image;
     private String role;
 
     @OneToMany(mappedBy = "user")

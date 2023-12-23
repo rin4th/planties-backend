@@ -55,6 +55,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .fullname(request.getFullname())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .url_image("null")
                 .role("client")
                 .build();
         var savedUser = usersRepository.save(user);

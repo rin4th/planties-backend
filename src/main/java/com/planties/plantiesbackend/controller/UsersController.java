@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "/profile")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class UsersController {
     public ResponseEntity<Object> getProfile(
             HttpServletRequest authorization
     ) {
-        Users user = service.getProfile(authorization);
+        Map<String, Object> user = service.getProfile(authorization);
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(user), HttpStatus.OK);
     }
 

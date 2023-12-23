@@ -39,7 +39,7 @@ public class PlantService {
     public List<Plant> getAllPlants(
             HttpServletRequest authorization
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -52,7 +52,7 @@ public class PlantService {
             HttpServletRequest authorization,
             UUID gardenId
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -74,7 +74,7 @@ public class PlantService {
             UUID gardenId,
             PlantRequest request
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -117,7 +117,7 @@ public class PlantService {
             UUID plantId,
             HttpServletRequest authorization
     ) {
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -149,7 +149,7 @@ public class PlantService {
             PlantRequest request,
             HttpServletRequest authorization
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){
@@ -187,7 +187,7 @@ public class PlantService {
             UUID plantId,
             HttpServletRequest authorization
     ){
-        Users user = usersService.getProfile(authorization);
+        Users user = usersService.checkUsers(authorization);
 
         var userID = user.getId();
         if (userID == null){

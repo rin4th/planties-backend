@@ -12,7 +12,15 @@ public interface OxygenRepository extends JpaRepository<Oxygen, UUID> {
     @Query("""
             SELECT u FROM Users u\s
             JOIN Oxygen o ON u.id = o.user_id\s
-            ORDER BY o.oxygen
+            ORDER BY o.oxygen DESC
             """)
     List<Oxygen> findAllOrderByOxygen();
+
+    @Query("""
+            SELECT u FROM Users u\s
+            JOIN Oxygen o ON u.id = o.user_id\s
+            ORDER BY o.rank\s
+            LIMIT 10
+            """)
+    List<Oxygen> getLeaderboard();
 }
