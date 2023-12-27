@@ -25,19 +25,30 @@ public class PlantController {
     private final PlantResponse response;
 
     @GetMapping(path = "plants")
-    public ResponseEntity<Object> getAllPlants(
-            HttpServletRequest authorization
+    public ResponseEntity<Object> getAllPlantsSort(
+            HttpServletRequest authorization,
+            @RequestParam(name = "sorting", defaultValue = "ASC") String sorting
     ){
-        List<Plant> plants = service.getAllPlants(authorization);
+        List<Plant> plants = service.getAllPlants(authorization, sorting);
+        return ResponseHandler.generateResponse("success", "Success get All Gardens", response.generateJson(plants), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "plants/search")
+    public ResponseEntity<Object> getSearchPlants(
+            HttpServletRequest authorization,
+            @RequestBody String plantName
+    ){
+        List<Plant> plants = service.getPlantByName(authorization, plantName);
         return ResponseHandler.generateResponse("success", "Success get All Gardens", response.generateJson(plants), HttpStatus.OK);
     }
 
     @GetMapping(path = "gardens/{gardenId}/plants")
     public ResponseEntity<Object> getAllPlantByGardenId(
             HttpServletRequest authorization,
-            @PathVariable UUID gardenId
+            @PathVariable UUID gardenId,
+            @RequestParam(name = "sorting", defaultValue = "ASC") String sorting
             )  {
-        List<Plant> plants = service.getAllPlantsByGardenId(authorization, gardenId);
+        List<Plant> plants = service.getAllPlantsByGardenId(authorization, gardenId, sorting);
         return ResponseHandler.generateResponse("success", "Success get All Gardens", response.generateJson(plants), HttpStatus.OK);
     }
 
@@ -67,6 +78,7 @@ public class PlantController {
             HttpServletRequest authorization,
             @PathVariable UUID plantId,
             @PathVariable UUID gardenId
+
     ){
         Plant plant = service.getPlantById(gardenId, plantId, authorization);
         return ResponseHandler.generateResponse("success", "Success delete Plant", response.generateJson(plant), HttpStatus.OK);

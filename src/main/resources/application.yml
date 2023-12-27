@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://:5432/planties_pbo
+    url: jdbc:postgresql://:5432/
     username:
     password:
     driver-class-name: org.postgresql.Driver
@@ -24,7 +24,7 @@ application:
 
 server:
   port: 8080
-  address: 
+  address:
 
 aws:
   s3:

@@ -29,10 +29,16 @@ public class GardenController {
 
     @GetMapping()
     public ResponseEntity<Object> getAllGardens(
-            HttpServletRequest header
+            HttpServletRequest header,
+            @RequestParam(name = "type", defaultValue = "") String type,
+            @RequestParam(name = "sorting", defaultValue = "") String sorting
             )  {
-
-        List<Garden> gardens = service.getAllGardens(header);
+        List<Garden> gardens;
+        if (sorting.isEmpty() && type.isEmpty()){
+            gardens = service.getAllGardens(header);
+        }else{
+            gardens = service.getAllGardensAndSorting(header, type, sorting);
+        }
         return ResponseHandler.generateResponse("success", "Success get All Gardens", gardenResponse.generateJson(gardens), HttpStatus.OK);
     }
 

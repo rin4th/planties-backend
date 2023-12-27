@@ -4,6 +4,7 @@ import com.planties.plantiesbackend.model.entity.Token;
 import jakarta.persistence.GenerationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
       on t.user.id = u.id\s
       where u.id = :id and (t.expired = false or t.revoked = false)\s
       """)
-    List<Token> findAllValidTokenByUser(UUID id);
+    List<Token> findAllValidTokenByUser(@Param("id") UUID id);
 
     Optional<Token> findByToken(String token);
 }

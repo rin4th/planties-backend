@@ -55,7 +55,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .fullname(request.getFullname())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .url_image("null")
+                .url_image("https://rpl-pbo-sister.s3.ap-southeast-1.amazonaws.com/pbo/Ellipse+1.png") // profile default
                 .role("client")
                 .build();
         var savedUser = usersRepository.save(user);

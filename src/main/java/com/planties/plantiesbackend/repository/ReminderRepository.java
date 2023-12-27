@@ -4,6 +4,7 @@ package com.planties.plantiesbackend.repository;
 import com.planties.plantiesbackend.model.entity.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public interface ReminderRepository extends JpaRepository<Reminder, UUID> {
             Join Garden g On r.garden_id = g.id\s
             where r.garden_id = :gardenId
             """)
-    public List<Reminder> findAllReminderByGardenId(UUID gardenId);
+    public List<Reminder> findAllReminderByGardenId(@Param("gardenId") UUID gardenId);
 
 }

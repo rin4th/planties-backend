@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -21,6 +22,9 @@ public class Garden {
     private String name;
     private ArrayList<String> url_image;
     private String type;
+
+    private LocalDate date;
+
 
     private UUID user_id;
 

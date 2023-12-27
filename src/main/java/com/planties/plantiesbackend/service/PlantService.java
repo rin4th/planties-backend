@@ -37,7 +37,8 @@ public class PlantService {
 
 
     public List<Plant> getAllPlants(
-            HttpServletRequest authorization
+            HttpServletRequest authorization,
+            String sorting
     ){
         Users user = usersService.checkUsers(authorization);
 
@@ -45,12 +46,19 @@ public class PlantService {
         if (userID == null){
             throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
         }
-        return plantRepository.findAllPlantByUserId(userID);
+        if (sorting.equals("ASC")){
+            return plantRepository.findAllPlantByUserIdASC(userID);
+        }else{
+            return plantRepository.findAllPlantByUserIdDESC(userID);
+        }
+
     }
+
 
     public List<Plant> getAllPlantsByGardenId(
             HttpServletRequest authorization,
-            UUID gardenId
+            UUID gardenId,
+            String sorting
     ){
         Users user = usersService.checkUsers(authorization);
 
@@ -66,7 +74,11 @@ public class PlantService {
         if (!garden.getUser_id().equals(userID)){
             throw new CustomException.InvalidIdException("Anda bukan pemilik garden ini");
         }
-        return plantRepository.findAllPlantByGardenId(garden.getId());
+        if (sorting.equals("ASC")){
+            return plantRepository.findAllPlantByGardenIdASC(garden.getId());
+        }else{
+            return plantRepository.findAllPlantByGardenIdDESC(garden.getId());
+        }
     }
 
     public Plant addNewPlant(
@@ -88,6 +100,8 @@ public class PlantService {
         if (!garden.getUser_id().equals(userID)){
             throw new CustomException.InvalidIdException("Anda bukan pemilik garden ini");
         }
+
+        // image processing
         UUID plantId = UUID.randomUUID();
         ArrayList<String> urlImages = new ArrayList<String>();
         for (String base64Image : request.getImageBase64()) {
@@ -105,11 +119,25 @@ public class PlantService {
                 .url_image(urlImages)
                 .garden_id(garden.getId())
                 .date(date)
+                .type(request.getType())
                 .oxygen(oxygen)
                 .user_id(userID)
                 .build();
         plantRepository.save(plant);
         return plant;
+    }
+
+    public List<Plant> getPlantByName(
+            HttpServletRequest authorization,
+            String plantName
+    ){
+        Users user = usersService.checkUsers(authorization);
+
+        List<Plant> searchedPlants = plantRepository.findPlantByName(plantName );
+        if (searchedPlants.isEmpty()){
+            throw new CustomException.BadRequestException( "Tanaman tidak ditemukan");
+        }
+        return searchedPlants;
     }
 
     public Plant getPlantById(
@@ -177,9 +205,16 @@ public class PlantService {
         if (request.getBanner() == null) {
             throw new CustomException.BadRequestException("Banner tidak boleh kosong");
         }
+
+        // image processing
+        ArrayList<String> urlImages = new ArrayList<String>();
+        for (String base64Image : request.getImageBase64()) {
+            urlImages.add(imageProcess.uploadImage(base64Image, "plant", plantId));
+        }
+
         plant.setName(request.getName());
         plant.setBanner(request.getBanner());
-        plant.setUrl_image(request.getImageBase64()); // temporarya
+        plant.setUrl_image(urlImages);
         return plant;
     }
 

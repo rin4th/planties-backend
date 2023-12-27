@@ -44,10 +44,12 @@ public class OxygenService {
                 break;
         }
         Optional<Oxygen> oxygenOptional = oxygenRepository.findById(user_id);
+        Users user = usersRepository.findById(user_id).get();
         if (oxygenOptional.isEmpty()) {
             Oxygen oxygenEntity = Oxygen.builder()
                     .user_id(user_id)
                     .oxygen(oxygen)
+                    .username(user.getUsername())
                     .rank(999)
                     .build();
             oxygenRepository.save(oxygenEntity);
@@ -55,7 +57,7 @@ public class OxygenService {
             Oxygen oxygenEntity = oxygenOptional.get();
             oxygenEntity.setOxygen(oxygenEntity.getOxygen() + oxygen);
         }
-
+        this.updateLeaderboard();
         return (double) oxygen;
     }
 
@@ -94,9 +96,8 @@ public class OxygenService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 5 0 * * *")
     public void updateLeaderboard(){
-        Random random = new Random();
         int rank = 1;
         for (Oxygen oxy : oxygenRepository.findAllOrderByOxygen()){
             oxy.setRank(rank);

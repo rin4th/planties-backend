@@ -20,5 +20,7 @@ public class Oxygen {
 
     private int rank;
 
+    private String username;
+
     private double oxygen;
 }

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 public class GardenRequest {
 
     private String name;
-
     private String type;
     private ArrayList<String> imageBase64;
 }

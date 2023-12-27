@@ -34,7 +34,7 @@ public class OxygenController {
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(oxygens), HttpStatus.OK);
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<Object> getRank(
             HttpServletRequest authorization,
             @PathVariable UUID userId
