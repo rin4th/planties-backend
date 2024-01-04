@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ImageGarden {
+public class ImageGarden{
     @Id
     private UUID id;
 

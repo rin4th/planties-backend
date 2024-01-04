@@ -57,7 +57,6 @@ public class OxygenService {
             Oxygen oxygenEntity = oxygenOptional.get();
             oxygenEntity.setOxygen(oxygenEntity.getOxygen() + oxygen);
         }
-        this.updateLeaderboard();
         return (double) oxygen;
     }
 
@@ -96,7 +95,7 @@ public class OxygenService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 5 0 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void updateLeaderboard(){
         int rank = 1;
         for (Oxygen oxy : oxygenRepository.findAllOrderByOxygen()){
@@ -111,13 +110,9 @@ public class OxygenService {
     }
 
     public Oxygen getRank(
-            HttpServletRequest authorization,
-            UUID userId
+            HttpServletRequest authorization
     ){
         Users user = usersService.checkUsers(authorization);
-        if (!user.getId().equals(userId)){
-            throw new CustomException.InvalidIdException("Jwt dengan UserID berbeda");
-        }
         return oxygenRepository.findById(user.getId()).get();
     }
 

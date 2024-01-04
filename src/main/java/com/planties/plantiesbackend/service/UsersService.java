@@ -1,7 +1,11 @@
 package com.planties.plantiesbackend.service;
 
 import com.planties.plantiesbackend.configuration.CustomException;
+import com.planties.plantiesbackend.model.entity.Oxygen;
 import com.planties.plantiesbackend.model.entity.Users;
+import com.planties.plantiesbackend.repository.GardenRepository;
+import com.planties.plantiesbackend.repository.OxygenRepository;
+import com.planties.plantiesbackend.repository.PlantRepository;
 import com.planties.plantiesbackend.repository.UsersRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,9 @@ public class UsersService {
 
     private final JwtService jwtService;
     private final UsersRepository usersRepository;
+    private final GardenRepository gardenRepository;
+    private final PlantRepository plantRepository;
+    private final OxygenRepository oxygenRepository;
 
     public Users checkUsers(HttpServletRequest authorization) {
         final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
@@ -61,12 +69,20 @@ public class UsersService {
         if (userID == null){
             throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
         }
+
+        int totalGarden = gardenRepository.countGardenOwned(user.getId());
+        int totalPlant = plantRepository.countPlantOwned(user.getId());
+        int rank = oxygenRepository.findById(userID).get().getRank();
+
         Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", user.getId());
         map.put("name", user.getUsername());
-        map.put("email", user.getEmail());
         map.put("full_name", user.getFullname());
         map.put("url_image", user.getUrl_image());
         map.put("role", user.getRole());
+        map.put("total_garden", totalGarden);
+        map.put("total_plant", totalPlant);
+        map.put("rank", rank);
 
         return map;
     }

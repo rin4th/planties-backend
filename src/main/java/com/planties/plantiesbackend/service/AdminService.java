@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -19,7 +18,7 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final UsersService usersService;
 
-    private int TotalUsers(
+    public int getTotalUsers(
             HttpServletRequest authorization
     ){
         Users user = usersService.checkUsers(authorization);
@@ -28,11 +27,10 @@ public class AdminService {
         if (!role.equals("admin")){
             throw new CustomException.AccessDeniedException("Anda Bukan Admin");
         }
-
         return adminRepository.getTotalUser();
     }
 
-    public Map<String, Object> getPopularPlantAndTotalUsers(
+    public Map<String, Object> getPopularPlant(
             HttpServletRequest authorization
     ){
         Users user = usersService.checkUsers(authorization);
@@ -47,16 +45,28 @@ public class AdminService {
         int tnmAir = adminRepository.getTotalAir();
         int tnmDaunHijau = adminRepository.getTotalDaunHijau();
         int totalPlant = tnmBuah + tnmBunga + tnmAir + tnmDaunHijau;
-        int totalUser = TotalUsers(authorization);
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("Tanaman Buah", ((double) tnmBuah / totalPlant) * 100);
         map.put("Tanaman Berbunga",  ((double) tnmBunga / totalPlant) * 100);
         map.put("Tanaman Air", ((double) tnmAir / totalPlant) * 100);
         map.put("Tanaman Daun Hijau", ((double) tnmDaunHijau / totalPlant) * 100);
-        map.put("Total User", totalUser);
+        map.put("Total Tanaman", totalPlant);
 
         return map;
+    }
+
+    public int getNewUser(
+            HttpServletRequest authorization
+    ){
+        Users user = usersService.checkUsers(authorization);
+
+        String role = user.getRole();
+        if (!role.equals("admin")){
+            throw new CustomException.AccessDeniedException("Anda Bukan Admin");
+        }
+
+        return adminRepository.getTotalNewUser();
     }
 
 }

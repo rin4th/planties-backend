@@ -55,16 +55,6 @@ public class ReminderController {
         return ResponseHandler.generateResponse("success", "Success add New Reminder", response.generateJson(reminder), HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "/{gardenId}/reminders/{reminderId}")
-    public ResponseEntity<Object> updateReminder(
-            HttpServletRequest authorization,
-            @PathVariable UUID gardenId,
-            @PathVariable UUID reminderId,
-            @RequestBody ReminderRequest request
-    ){
-        Reminder reminder = service.updateReminder(authorization, gardenId, reminderId, request);
-        return ResponseHandler.generateResponse("success", "Success update Reminder", response.generateJson(reminder), HttpStatus.OK);
-    }
 
     @DeleteMapping(path = "/{gardenId}/reminders/{reminderId}")
     public ResponseEntity<Object> deleteReminder(

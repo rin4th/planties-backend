@@ -5,6 +5,7 @@ import com.planties.plantiesbackend.model.entity.Oxygen;
 import com.planties.plantiesbackend.model.response.AdminResponse;
 import com.planties.plantiesbackend.model.response.ResponseHandler;
 import com.planties.plantiesbackend.service.AdminService;
+import com.planties.plantiesbackend.service.OxygenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,13 +24,25 @@ public class AdminController {
 
     private final AdminService service;
     private final AdminResponse response;
+    private final OxygenService  oxygenService;
 
     @GetMapping()
     public ResponseEntity<Object> getAdminPage(
             HttpServletRequest authorization
     ) {
-        Map<String, Object> adminStatistic = service.getPopularPlantAndTotalUsers(authorization);
+        Map<String, Object> adminStatistic = service.getPopularPlant(authorization);
+        int totalUser = service.getTotalUsers(authorization);
+        int totalNewUser = service.getNewUser(authorization);
+        adminStatistic.put("totalUser", totalUser);
+        adminStatistic.put("totalNewUser", totalNewUser);
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(adminStatistic), HttpStatus.OK);
     }
 
+    @GetMapping(path = "/update/leaderboard")
+    public ResponseEntity<Object> updateLeaderboard(
+            HttpServletRequest request
+    ){
+        oxygenService.updateLeaderboard();
+        return ResponseHandler.generateResponse("success", "Success update Leaderboards", null, HttpStatus.OK);
+    }
 }

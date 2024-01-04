@@ -45,4 +45,12 @@ public class AuthenticationController {
     ) throws IOException {
         service.refreshToken(request, response);
     }
+
+    @DeleteMapping("authentications")
+    public ResponseEntity<Object> logout(
+            HttpServletRequest authorization
+    ) throws IOException {
+        service.logout(authorization);
+        return ResponseHandler.generateResponse("success", "Success logout", null, HttpStatus.OK);
+    }
 }

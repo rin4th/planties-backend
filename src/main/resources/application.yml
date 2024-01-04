@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://:5432/
+    url: jdbc:postgresql://localhost:5432/planties_pbo
     username:
     password:
     driver-class-name: org.postgresql.Driver
@@ -17,14 +17,14 @@ spring:
 application:
   plantiesbackend:
     jwt:
-      secret-key:
+      secret-key: 
       expiration: 86400000
       refresh-token:
         expiration: 604800000
 
 server:
   port: 8080
-  address:
+  address: localhost
 
 aws:
   s3:

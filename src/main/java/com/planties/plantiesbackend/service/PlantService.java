@@ -5,18 +5,12 @@ import com.planties.plantiesbackend.configuration.CustomException;
 import com.planties.plantiesbackend.model.entity.Garden;
 import com.planties.plantiesbackend.model.entity.Plant;
 import com.planties.plantiesbackend.model.entity.Users;
-import com.planties.plantiesbackend.model.request.GardenRequest;
 import com.planties.plantiesbackend.model.request.PlantRequest;
-import com.planties.plantiesbackend.model.response.PlantResponse;
 import com.planties.plantiesbackend.repository.GardenRepository;
 import com.planties.plantiesbackend.repository.PlantRepository;
-import com.planties.plantiesbackend.repository.UsersRepository;
-import com.planties.plantiesbackend.utils.ImageProcess;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,7 +26,7 @@ public class PlantService {
     private final UsersService usersService;
     private final PlantRepository plantRepository;
     private final GardenRepository gardenRepository;
-    private final ImageProcess imageProcess;
+    private final ImagePlantService image;
     private final OxygenService oxgenService;
 
 
@@ -105,7 +99,7 @@ public class PlantService {
         UUID plantId = UUID.randomUUID();
         ArrayList<String> urlImages = new ArrayList<String>();
         for (String base64Image : request.getImageBase64()) {
-            urlImages.add(imageProcess.uploadImage(base64Image, "plant", plantId));
+            urlImages.add(image.uploadImage(base64Image, plantId));
         }
 
         // Initialize Oxygen
@@ -199,22 +193,26 @@ public class PlantService {
         if (!plant.getUser_id().equals(userID)) {
             throw new CustomException.InvalidIdException("Anda bukan pemiliki tanaman ini");
         }
-        if (request.getName() == null) {
-            throw new CustomException.BadRequestException("Nama tanaman tidak boleh kosong");
+        if (request.getName() != null) {
+            plant.setName(request.getName());
         }
-        if (request.getBanner() == null) {
-            throw new CustomException.BadRequestException("Banner tidak boleh kosong");
+        if (request.getBanner() != null) {
+            plant.setBanner(request.getBanner());
+        }
+        if (request.getImageBase64() != null) {
+            ArrayList<String> url_image = plant.getUrl_image();
+
+            // image processing
+            ArrayList<String> newImage = new ArrayList<String>();
+            for (String base64Image : request.getImageBase64()) {
+                newImage.add(image.uploadImage(base64Image, plantId));
+            }
+
+            url_image.addAll(newImage);
+            plant.setUrl_image(url_image);
+
         }
 
-        // image processing
-        ArrayList<String> urlImages = new ArrayList<String>();
-        for (String base64Image : request.getImageBase64()) {
-            urlImages.add(imageProcess.uploadImage(base64Image, "plant", plantId));
-        }
-
-        plant.setName(request.getName());
-        plant.setBanner(request.getBanner());
-        plant.setUrl_image(urlImages);
         return plant;
     }
 

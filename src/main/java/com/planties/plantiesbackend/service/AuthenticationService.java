@@ -2,13 +2,16 @@ package com.planties.plantiesbackend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.planties.plantiesbackend.configuration.CustomException;
+import com.planties.plantiesbackend.model.entity.Oxygen;
 import com.planties.plantiesbackend.model.entity.Token;
 import com.planties.plantiesbackend.model.entity.Users;
 import com.planties.plantiesbackend.model.request.LoginRequest;
 import com.planties.plantiesbackend.model.request.RegisterRequest;
 import com.planties.plantiesbackend.model.response.AuthenticationResponse;
+import com.planties.plantiesbackend.repository.OxygenRepository;
 import com.planties.plantiesbackend.repository.TokenRepository;
 import com.planties.plantiesbackend.repository.UsersRepository;
+import com.planties.plantiesbackend.service.interfaces.AuthenticationInterface;
 import com.planties.plantiesbackend.utils.TokenType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,17 +30,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class AuthenticationService implements AuthenticationInterface {
 
     private final UsersRepository usersRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
+    private final OxygenRepository oxygenRepository;
+    private final OxygenService oxygenService;
 
 
     public AuthenticationResponse register(RegisterRequest request) {
-        if (request.getUsername().isEmpty() || request.getEmail().isEmpty() || request.getFullname().isEmpty() || request.getPassword().isEmpty()){
+        if (request.getUsername().isEmpty()  || request.getFullname().isEmpty() || request.getPassword().isEmpty()){
             throw new CustomException.BadRequestException("tidak dapat membuat user baru karena properti yang dibutuhkan tidak ada");
         }
 
@@ -45,23 +51,26 @@ public class AuthenticationService {
             throw new CustomException.UsernameTakenException("Tidak dapat membuat user baru dengan username yang telah dipakai");
         }
 
-        Optional<Users> existEmail = usersRepository.findByEmail(request.getEmail());
-        if (existEmail.isPresent()){
-            throw new CustomException.EmailTakenException("Tidak dapat membuat user baru dengan email yang telah digunakan");
-        }
-
         var user = Users.builder()
                 .username(request.getUsername())
-                .email(request.getEmail())
                 .fullname(request.getFullname())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .url_image("https://rpl-pbo-sister.s3.ap-southeast-1.amazonaws.com/pbo/Ellipse+1.png") // profile default
+                .url_image("https://rpl-pbo-sister.s3.ap-southeast-1.amazonaws.com/pbo/profile.png") // profile default
                 .role("client")
                 .build();
         var savedUser = usersRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
+        Oxygen oxygenEntity = Oxygen.builder()
+                .user_id(user.getId())
+                .oxygen(0)
+                .username(user.getUsername())
+                .rank(999)
+                .build();
+        oxygenRepository.save(oxygenEntity);
+
+
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -139,6 +148,25 @@ public class AuthenticationService {
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
+        }
+    }
+
+    public void logout(
+            HttpServletRequest authorization
+    )throws IOException{
+        final String authHeader = authorization.getHeader(HttpHeaders.AUTHORIZATION);
+        final String jwt;
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            return;
+        }
+        jwt = authHeader.substring(7);
+        var storedToken = tokenRepository.findByToken(jwt)
+                .orElse(null);
+        if (storedToken != null) {
+            storedToken.setExpired(true);
+            storedToken.setRevoked(true);
+            tokenRepository.save(storedToken);
+            SecurityContextHolder.clearContext();
         }
     }
 

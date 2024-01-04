@@ -16,7 +16,7 @@ public interface ReminderRepository extends JpaRepository<Reminder, UUID> {
     @Query("""
             Select r From Reminder r\s
             Join Garden g On r.garden_id = g.id\s
-            where r.garden_id = :gardenId
+            where r.garden_id = :gardenId Order By r.type
             """)
     public List<Reminder> findAllReminderByGardenId(@Param("gardenId") UUID gardenId);
 

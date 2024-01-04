@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ public class Reminder {
     private String name;
 
     private String type;
-
+    private Integer original;
     private Integer duration;
 
     private UUID garden_id;

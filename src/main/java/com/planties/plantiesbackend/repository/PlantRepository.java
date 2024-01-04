@@ -56,6 +56,9 @@ public interface PlantRepository extends JpaRepository<Plant, UUID> {
             """)
     List<Plant> findPlantByName(@Param("plantName") String plantName);
 
+    @Query("Select COUNT(p) From Plant p Where p.user_id = :id")
+    int countPlantOwned(@Param("id") UUID id);
+
 //    @Query("""
 //            Select p From Plant p\s
 //            Join Users u On p.user_id = u.id\s

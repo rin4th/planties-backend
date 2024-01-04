@@ -34,12 +34,11 @@ public class OxygenController {
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(oxygens), HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user")
     public ResponseEntity<Object> getRank(
-            HttpServletRequest authorization,
-            @PathVariable UUID userId
+            HttpServletRequest authorization
     ){
-        Oxygen oxygen = service.getRank(authorization, userId);
+        Oxygen oxygen = service.getRank(authorization);
         return ResponseHandler.generateResponse("success", "Success get users", response.generateJson(oxygen), HttpStatus.OK);
     }
 }

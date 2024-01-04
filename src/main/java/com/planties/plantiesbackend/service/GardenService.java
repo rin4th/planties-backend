@@ -5,13 +5,10 @@ import com.planties.plantiesbackend.model.entity.Garden;
 import com.planties.plantiesbackend.model.entity.Users;
 import com.planties.plantiesbackend.model.request.GardenRequest;
 import com.planties.plantiesbackend.repository.GardenRepository;
-import com.planties.plantiesbackend.repository.UsersRepository;
-import com.planties.plantiesbackend.utils.ImageProcess;
+import com.planties.plantiesbackend.repository.PlantRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,7 +21,7 @@ public class GardenService {
 
     private final UsersService usersService;
     private final GardenRepository gardenRepository;
-    private final ImageProcess imageProcess;
+    private final ImageGardenService image;
 
 
     public List<Garden> getAllGardens(
@@ -51,8 +48,6 @@ public class GardenService {
         }else{
             return gardenRepository.findAllGardensByTypeDESC(userID, type);
         }
-
-
     }
 
     public Garden addNewGarden(
@@ -75,7 +70,7 @@ public class GardenService {
         UUID gardenId = UUID.randomUUID();
         ArrayList<String> urlImages = new ArrayList<String>();
         for (String base64Image : request.getImageBase64()) {
-            urlImages.add(imageProcess.uploadImage(base64Image, "garden", gardenId));
+            urlImages.add(image.uploadImage(base64Image, gardenId));
         }
 
         LocalDate date = LocalDate.now();
@@ -110,6 +105,8 @@ public class GardenService {
         if (!garden.getUser_id().equals(userID)){
             throw new CustomException.InvalidIdException("Anda bukan pemilik garden ini");
         }
+
+
         return optionalGarden;
     }
 
@@ -120,7 +117,7 @@ public class GardenService {
             HttpServletRequest authorization
             ) {
         Users user = usersService.checkUsers(authorization);
-
+ 
         var userID = user.getId();
         if (userID == null){
             throw new CustomException.UsernameNotFoundException("User tidak ditemukan");
@@ -133,25 +130,25 @@ public class GardenService {
         if (!garden.getUser_id().equals(userID)){
             throw new CustomException.InvalidIdException("Anda bukan pemilik garden ini");
         }
-        if (request.getName() == null) {
-            throw new CustomException.BadRequestException("Nama garden tidak boleh kosong");
+        if (request.getName() != null) {
+            garden.setName(request.getName());
         }
-        if (request.getType() == null) {
-            throw new CustomException.BadRequestException("Type tidak boleh kosong");
+        if (request.getType() != null) {
+            garden.setType(request.getType());
         }
-        ArrayList<String> url_image = garden.getUrl_image();
+        if (request.getImageBase64() != null){
+            ArrayList<String> url_image = garden.getUrl_image();
 
-        // image processing
-        ArrayList<String> newImage = new ArrayList<String>();
-        for (String base64Image : request.getImageBase64()) {
-            newImage.add(imageProcess.uploadImage(base64Image, "garden", gardenId));
+            // image processing
+            ArrayList<String> newImage = new ArrayList<String>();
+            for (String base64Image : request.getImageBase64()) {
+                newImage.add(image.uploadImage(base64Image, gardenId));
+            }
+
+            url_image.addAll(newImage);
+            garden.setUrl_image(url_image);
         }
 
-        url_image.addAll(newImage);
-
-        garden.setName(request.getName());
-        garden.setType(request.getType());
-        garden.setUrl_image(url_image);
         return garden;
     }
 

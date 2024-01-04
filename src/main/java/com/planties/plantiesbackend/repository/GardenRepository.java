@@ -42,4 +42,8 @@ public interface GardenRepository extends JpaRepository<Garden, UUID> {
             and (g.name = :name and g.type = :type)
             """)
     Optional<Garden> findGardenByNameAndType(@Param("id") UUID id, @Param("name") String name, @Param("type") String type);
+
+    @Query("Select COUNT(g) From Garden g Where g.user_id = :id")
+    int countGardenOwned(@Param("id") UUID id);
+
 }
